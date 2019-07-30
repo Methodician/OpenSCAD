@@ -3,63 +3,63 @@
 
 
 
-module Ring() {
+union(){
+    translate([0,0,3])
+        Net();
+    Disk();
+
+}
+
+module Disk() {
     difference() {
         union() {
-            MainDisk();
-            InnerSupport();
-            OuterRing();
+            DMainDisk();
+            DCubeSupport();
+            DLipSupport();
         }
-        MaterialReducer();
-        InnerGap();
+        DMaterialReducer();
+        DInnerGap();
     }
-
-module InnerGap() {
-    linear_extrude(height=10)
-            square(40, center=true);
 }
-    
-module InnerSupport() {
+
+module DCubeSupport() {
     linear_extrude(height=10)
         square(43, center=true);
 }
 
-module MainDisk() {
+module DMainDisk() {
     difference() {
         linear_extrude(height=4)
             circle(d=87);
-        RingFrom(35, 12)
+        #RingFrom(37, 12)
             translate([0,0,1])
             linear_extrude(height=3)
-                circle(d=15);
+                circle(d=18);
 
     }
 }
 
-module OuterRing() {
+module DInnerGap() {
+    linear_extrude(height=10)
+            square(40, center=true);
+}
+
+module DLipSupport() {
     difference() {
         linear_extrude(height=7)
-            circle(d=91);
+            circle(d=75.5);
         linear_extrude(height=7)
-            circle(d=87);
+            circle(d=71.5);
     }
 
 }
-module MaterialReducer() {
+
+module DMaterialReducer() {
     translate([0,0,11])
-        RingFrom(36, 12)
+        RingFrom(34, 12)
             rotate([90,0,0])
             linear_extrude(height=10)
                 circle(r=10);
-}
-
-}
-
-union(){
-    translate([0,0,3])
-        Net();
-    Ring();
-
 }
 
 
@@ -67,18 +67,18 @@ union(){
 module Net() {
     rotate([0,0,45])
         difference() {
-            Frame();
-                OuterGaps(); 
-                CoreGap();
+            NFrame();
+                NOuterGaps(); 
+                NCoreGap();
         }
 }
 
-module Frame() {
+module NFrame() {
     linear_extrude(height=42, scale=0.9)
         square(33, center=true);
 }
 
-module CoreGap() {
+module NCoreGap() {
     union(){
         rotate([0,0,45])
             linear_extrude(height=38, scale=0.9)
@@ -88,7 +88,7 @@ module CoreGap() {
     }
 }
 
-module OuterGaps() {
+module NOuterGaps() {
     RingFrom(24, 4)
         rotate([0,0,45])
             linear_extrude(height=42)
