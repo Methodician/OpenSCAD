@@ -31,10 +31,10 @@ module DMainDisk() {
     difference() {
         linear_extrude(height=4)
             circle(d=87);
-        #RingFrom(37, 12)
-            translate([0,0,1])
-            linear_extrude(height=3)
-                circle(d=18);
+        #RingFrom(34, 12)
+            translate([0,0,0])
+            linear_extrude(height=4)
+                circle(d=16);
 
     }
 }
