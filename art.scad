@@ -1,13 +1,26 @@
+// translate([1,0])
+// mirror(0)
+// horn(50, 15);
+
+// translate([-1,0])
+// horn(50, 15);
+
+RingFrom(4, 5)
+	Horn(50, 15);
+
+// RingFrom(48,12)
+//     dodechaSnowman(5);
+
 
 // The idea is to twist a translated circle:
 // -
-/*
-	linear_extrude(height = 10, twist = 360, scale = 0)
-	translate([1,0])
-	circle(r = 1);
-*/
 
-module horn(height = 10, radius = 3, 
+	// linear_extrude(height = 10, twist = 360, scale = 0)
+	// translate([1,0])
+	// circle(r = 1);
+
+
+module Horn(height = 10, radius = 3, 
 			twist = 720, $fn = 50) 
 {
 	// A centered circle translated by 1xR and 
@@ -25,24 +38,15 @@ module horn(height = 10, radius = 3,
 	circle(r=radius);
 }
 
-// translate([3,0])
-// mirror(0)
-// horn(50, 15);
 
-// translate([-3,0])
-// horn(50, 15);
-
-// RingFrom(48,12)
-//     dodechaSnowman(5);
-
-module dodechaSnowman(scale) {
+module DodechaSnowman(scale) {
     translate([0, 0, scale*4+scale*2]) {
         dodechaTrio(scale);
     }
 }
 
 //create a dodecahedron by intersecting 6 boxes
-module dodecahedron(height) 
+module Dodecahedron(height) 
 {
 	scale([height,height,height]) //scale by height parameter
 	{
@@ -61,7 +65,7 @@ module dodecahedron(height)
 	}
 }
 
-module dodechaTrio(scale) {
+module DodechaTrio(scale) {
     //create 3 stacked dodecahedra 
     //call the module with a height of 1 and move up 2
     translate([0,0,scale*2])dodecahedron(scale); 
