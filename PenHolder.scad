@@ -1,5 +1,5 @@
-outerDiameter = 100;
-innerDiameter = 10;
+outerDiameter = 40;
+innerDiameter = 11.22;
 mainHeight = 30;
 
 
@@ -12,11 +12,12 @@ module Holder() {
 
     difference(){
         Base();
-        translate([0,0,2])
+        translate([0,0,3])
             OuterReduction();
-        translate([0,0, mainHeight / 2])
+        translate([0,0, 7])
             GuideRidge();
-        InnerVoid();
+        translate([0,0,2])
+            InnerVoid();
     }
 
 }
@@ -32,16 +33,20 @@ module OuterReduction(){
 
     difference() {
         Outside();
-         Inside();
+        Inside();
     }
 
     module Inside() {
-        linear_extrude(mainHeight)
-        circle(d=innerDiameter + 3);
+        union(){
+            linear_extrude(mainHeight)
+                circle(d=innerDiameter + 2);
+            translate([0,0,-15])
+                Base();
+        }
     }
     module Outside() {
         linear_extrude(mainHeight)
-        circle(d=outerDiameter);
+            circle(d=outerDiameter);
     }
 }
 

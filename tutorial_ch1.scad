@@ -1,29 +1,55 @@
 
-adjoiningTranslateReduction = 0.001;
-carHeight = 10;
-carLength = 60;
-carWidth = 20;
-wheelWidth = 3;
-axilLength = 30;
-axilRadius = 2;
-
 // $fa = 1;
 // $fs = 0.4;
+// adjoiningTranslateReduction = 0.001;
 
-CarBody();
-FrontRightWheel();
-FrontLeftWheel();
-BackRightWheel();
-BackLeftWheel();
-FrontAxil();
-ReacAxil();
+
+translate([0,0,10])
+    cube([40, 30, 20], center=true);
+
+translate([0,0,20])
+    Roof();
+
+
+// Roof();
+
+s = -15;
+e = -20;
+n = 15;
+w = 20;
+
+module Roof() {
+    polyhedron( 
+        points=[ [w, n, 0 ], [w, s, 0], [e, s, 0], [e, n, 0], [0, 0, 10]],
+        faces=[ [0,1,4], [1,2,4], [2,3,4],[3,0,4], [1,2,3], [1,0,3]]
+    );
+}
+
+
+
+
+
+// carHeight = 10;
+// carLength = 60;
+// carWidth = 20;
+// wheelWidth = 3;
+// axilLength = 30;
+// axilRadius = 2;
+
+// CarBody();
+// FrontRightWheel();
+// FrontLeftWheel();
+// BackRightWheel();
+// BackLeftWheel();
+// FrontAxil();
+// RearAxil();
 
 module FrontAxil() {
     translate([ -carLength/3, 0, 0])
     Axil();
 }
 
-module ReacAxil() {
+module RearAxil() {
     translate([ carLength/3, 0, 0])
     Axil();
 }
