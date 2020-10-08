@@ -1,3 +1,6 @@
+// $fa = 1;
+// $fs = 0.4;
+
 // translate([1,0])
 // mirror(0)
 // horn(50, 15);
@@ -5,8 +8,8 @@
 // translate([-1,0])
 // horn(50, 15);
 
-RingFrom(4, 5)
-	Horn(50, 15);
+RingFrom(6, 5)
+	Horn(150, 45, 2020, 150);
 
 // RingFrom(48,12)
 //     dodechaSnowman(5);
@@ -21,8 +24,7 @@ RingFrom(4, 5)
 
 
 module Horn(height = 10, radius = 3, 
-			twist = 720, $fn = 50) 
-{
+			twist = 720, fn=50){
 	// A centered circle translated by 1xR and 
 	// twisted by 360° degrees, covers a 2x(2xR) space.
 	// -
@@ -33,7 +35,7 @@ module Horn(height = 10, radius = 3,
 	// The actual code.
 	// -
 	linear_extrude(height = height, twist = twist, 
-				   scale=0, $fn = $fn)
+				   scale=0, $fn = fn)
 	translate([radius,0])
 	circle(r=radius);
 }
