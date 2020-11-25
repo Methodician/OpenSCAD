@@ -9,7 +9,7 @@
 // horn(50, 15);
 
 RingFrom(6, 5)
-	Horn(150, 45, 2020, 150);
+	Horn(150, 45, 2020, 20);
 
 // RingFrom(48,12)
 //     dodechaSnowman(5);
