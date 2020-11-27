@@ -4,7 +4,7 @@
 OVERLAP_FIXER_THING = 0.0008;
 
 // Guide
-GUIDE_DEPTH = 17;
+GUIDE_DEPTH = 37;
 GUIDE_WIDTH = 35;
 GUIDE_HEIGHT = 10;
 // Holder Base
@@ -13,11 +13,11 @@ BASE_DEPTH = 120;
 BASE_HEIGHT = 10;
 // Grinding Stone
 //24.33
-STONE_WIDTH = 24.33;
+STONE_WIDTH = 24.4;
 //101.6
-STONE_DEPTH = 101.6;
+STONE_DEPTH = 101.7;
 //6.95
-STONE_HEIGHT = 6.95;
+STONE_HEIGHT = 6.98;
 
 
 module Handle(length, diameter) {
@@ -38,38 +38,41 @@ module Handle(length, diameter) {
 module GuideRail(length) {
     rotate([90, 0, 0]) 
     linear_extrude(height = length, center = true, convexity = 10, twist = 0)
-        polygon(points=[[0 - OVERLAP_FIXER_THING,0 - OVERLAP_FIXER_THING],[BASE_HEIGHT,0],[0,BASE_HEIGHT]], center=true);
+        polygon(points=[[0 - OVERLAP_FIXER_THING,0 - OVERLAP_FIXER_THING],[BASE_HEIGHT*.67,0],[0,BASE_HEIGHT]], center=true);
 }
 
 module BaseBody() {
     cube([BASE_WIDTH, BASE_DEPTH, BASE_HEIGHT], true);
+    translate([0, BASE_DEPTH/2, 0]){
+        Handle(BASE_DEPTH*.7, 8); 
+    }
+    rotate([0, 0, 180]) {
+        translate([0, BASE_DEPTH/2, 0]){
+            Handle(BASE_DEPTH*.7, 8); 
+        }
+    }
 }
 
 module Stone() {
     cube([STONE_WIDTH, STONE_DEPTH, STONE_HEIGHT + OVERLAP_FIXER_THING], true);
 }
 
+
 module Base() {
     difference(){
-        translate([0, 0, BASE_HEIGHT/2]){
-            BaseBody();
-            translate([0, BASE_DEPTH/2, 0]){
-                Handle(BASE_DEPTH, 8); 
+        // translate([0, 0, BASE_HEIGHT/2]){
+        BaseBody();
+        translate([BASE_WIDTH/2, 0, -BASE_HEIGHT/2]){
+            rotate([0,0,180]){
+                GuideRail(BASE_DEPTH + OVERLAP_FIXER_THING);
             }
-            rotate([0, 0, 180]) {
-                translate([0, BASE_DEPTH/2, 0]){
-                    Handle(BASE_DEPTH, 8); 
-                }
-            }
-            
         }
-        translate([BASE_WIDTH/2, 0, 0])
-        rotate([0,270,0])
-            GuideRail(BASE_DEPTH + OVERLAP_FIXER_THING);  
-        translate([-BASE_WIDTH/2 - OVERLAP_FIXER_THING, 0, 0])
+        translate([-BASE_WIDTH/2 - OVERLAP_FIXER_THING, 0, -BASE_HEIGHT/2]){
             GuideRail(BASE_DEPTH + OVERLAP_FIXER_THING);
-        translate([0, 0, BASE_HEIGHT])
-            Stone();
+        }
+        translate([0, 0, BASE_HEIGHT-STONE_HEIGHT]){
+            #Stone();
+        }
     }
 }
 
@@ -94,12 +97,12 @@ module GuideBody(){
 
 module GuideSide() {
     translate([-BASE_WIDTH/2, 0, -GUIDE_HEIGHT]) {
-        rotate([0, -90, 180]) {
-            GuideRail(GUIDE_DEPTH);
+        rotate([0, 0, 0]) {
+            #GuideRail(GUIDE_DEPTH);
         }
     }
     translate([-BASE_WIDTH/2, 0, 0]) {
-        rotate([0, 90, 180]) {
+        rotate([180, 0, 180]) {
             GuideRail(GUIDE_DEPTH);
         }
     }
@@ -136,16 +139,21 @@ module Guide() {
     }
 }
 
+
+
+// FOR DISPLAY AND WORKING
+translate([0, 0, GUIDE_HEIGHT]) {
+    Guide();
+}
+translate([0, 0, BASE_HEIGHT/2]) {
+    Base();
+}
+// GuideSide();
+
 // FOR PRINTING
 // translate([0, 0, GUIDE_DEPTH/2]) {
 //     rotate([-90, 0, 0]) {
 //         Guide(); 
 //     }
-// }
-// Base();
-
-// FOR DISPLAY AND WORKING
-// translate([0, 0, GUIDE_HEIGHT]) {
-//     Guide();
 // }
 // Base();
