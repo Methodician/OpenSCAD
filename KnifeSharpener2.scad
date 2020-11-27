@@ -20,17 +20,17 @@ STONE_DEPTH = 101.7;
 STONE_HEIGHT = 6.98;
 
 
-module Handle(length, diameter) {
+module Handle(x=10, y=100, z=10, diameter=10) {
  
-    translate([0,length/2,0]){
+    translate([0,y/2,0]){
         sphere(d=diameter);
     }
     intersection(){
-        resize([diameter, length, diameter]){
+        resize([x, y, z]){
             sphere(d=diameter);
         }
-        translate([0, length/4 + diameter/4, 0]) {
-            cube([diameter, length/2 + diameter/2, diameter], true);
+        translate([0, y/4 + diameter/4, 0]) {
+            cube([x, y/2 + diameter/2, y], true);
         }
     }
 }
@@ -44,13 +44,13 @@ module GuideRail(length) {
 module BaseBody() {
     cube([BASE_WIDTH, BASE_DEPTH, BASE_HEIGHT], true);
     translate([0, BASE_DEPTH/2, 0]){
-        Handle(BASE_DEPTH*.7, 8); 
+        Handle(y = BASE_DEPTH*.7, x=15); 
     }
-    rotate([0, 0, 180]) {
-        translate([0, BASE_DEPTH/2, 0]){
-            Handle(BASE_DEPTH*.7, 8); 
-        }
-    }
+    // rotate([0, 0, 180]) {
+    //     translate([0, BASE_DEPTH/2, 0]){
+    //         Handle(y = BASE_DEPTH*.7, x=15); 
+    //     }
+    // }
 }
 
 module Stone() {
@@ -71,7 +71,7 @@ module Base() {
             GuideRail(BASE_DEPTH + OVERLAP_FIXER_THING);
         }
         translate([0, 0, BASE_HEIGHT-STONE_HEIGHT]){
-            #Stone();
+            Stone();
         }
     }
 }
@@ -123,14 +123,14 @@ module Guide() {
             translate([0, 0, 5]){
                 GuideBody();
             }
-            translate([-BASE_WIDTH/2, 4.5, -4.5]) {
+            translate([-BASE_WIDTH/2, 4.5, -5]) {
                 rotate([0, 0, 90]) {
-                    Handle(GUIDE_WIDTH*3, 8);
+                    Handle(y = GUIDE_WIDTH*3, x=15);
                 }                  
             }
-            translate([BASE_WIDTH/2, 4.5, -4.5]) {
+            translate([BASE_WIDTH/2, 4.5, -5]) {
                 rotate([0, 0, -90]) {
-                    Handle(GUIDE_WIDTH*3, 8);
+                    Handle(y = GUIDE_WIDTH*3, x=15);
                 }                  
             }
         }
