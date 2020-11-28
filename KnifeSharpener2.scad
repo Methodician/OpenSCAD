@@ -1,5 +1,5 @@
-// $fa = 1;
-// $fs = 0.4;
+$fa = 1;
+$fs = 0.4;
 
 OVERLAP_FIXER_THING = 0.0008;
 
@@ -44,7 +44,7 @@ module GuideRail(length) {
 module BaseBody() {
     cube([BASE_WIDTH, BASE_DEPTH, BASE_HEIGHT], true);
     translate([0, BASE_DEPTH/2, 0]){
-        Handle(y = BASE_DEPTH*.7, x=15); 
+        Handle(y = BASE_DEPTH, x=18); 
     }
     // rotate([0, 0, 180]) {
     //     translate([0, BASE_DEPTH/2, 0]){
@@ -60,7 +60,6 @@ module Stone() {
 
 module Base() {
     difference(){
-        // translate([0, 0, BASE_HEIGHT/2]){
         BaseBody();
         translate([BASE_WIDTH/2, 0, -BASE_HEIGHT/2]){
             rotate([0,0,180]){
@@ -98,7 +97,7 @@ module GuideBody(){
 module GuideSide() {
     translate([-BASE_WIDTH/2, 0, -GUIDE_HEIGHT]) {
         rotate([0, 0, 0]) {
-            #GuideRail(GUIDE_DEPTH);
+            GuideRail(GUIDE_DEPTH);
         }
     }
     translate([-BASE_WIDTH/2, 0, 0]) {
@@ -123,12 +122,12 @@ module Guide() {
             translate([0, 0, 5]){
                 GuideBody();
             }
-            translate([-BASE_WIDTH/2, 4.5, -5]) {
+            translate([-BASE_WIDTH/2, 11, -5]) {
                 rotate([0, 0, 90]) {
                     Handle(y = GUIDE_WIDTH*3, x=15);
                 }                  
             }
-            translate([BASE_WIDTH/2, 4.5, -5]) {
+            translate([BASE_WIDTH/2, 11, -5]) {
                 rotate([0, 0, -90]) {
                     Handle(y = GUIDE_WIDTH*3, x=15);
                 }                  
@@ -142,12 +141,12 @@ module Guide() {
 
 
 // FOR DISPLAY AND WORKING
-translate([0, 0, GUIDE_HEIGHT]) {
-    Guide();
-}
-translate([0, 0, BASE_HEIGHT/2]) {
-    Base();
-}
+// translate([0, 0, GUIDE_HEIGHT]) {
+//     Guide();
+// }
+// translate([0, 0, BASE_HEIGHT/2]) {
+//     Base();
+// }
 // GuideSide();
 
 // FOR PRINTING
@@ -156,4 +155,6 @@ translate([0, 0, BASE_HEIGHT/2]) {
 //         Guide(); 
 //     }
 // }
-// Base();
+translate([0, 0, BASE_HEIGHT/2]) {
+    Base();
+}
