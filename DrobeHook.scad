@@ -20,7 +20,7 @@ module Hook() {
 
 module plug() {
     difference() {
-        cylinder(d=holeDiameter, h=holeDepth);
+        cylinder(d2=holeDiameter, d1=holeDiameter-1 , h=holeDepth);
         cylinder(d=holeDiameter-4, h=holeDepth);
     }
 }
@@ -64,7 +64,7 @@ hook_and_front_thickness = 4;
 // clip_length = 55;
 
 
-number_of_hooks = 3;
+number_of_hooks = 2;
 // Distance between top of door and first hanger hook
 first_hook_offset = 35;  // rounded: 60
 // Distance between successive hanger hooks (if more than one)
@@ -89,6 +89,9 @@ $fn = 72;
 thickness = hook_and_front_thickness;
 // top_thickness = top_and_back_thickness;
 // back_thickness = double_sided ? thickness : top_thickness;
+front_length = first_hook_offset + (number_of_hooks - 1) * hook_distance;
+
+brase_thickness = holeDiameter*0.4;
 
 module hook_base() {
   difference() {
@@ -171,24 +174,19 @@ module door_hook() {
 // door_hook();
 
 module wall_hook() {
-//   difference() {
-    union(){
-        translate([0, 0, holeDiameter/2])
-        rotate([0, 90, 0])
-            cylinder(d=holeDiameter, h=thickness);
-
-    union() {
-      front_length = first_hook_offset + (number_of_hooks - 1) * hook_distance;
-      translate([0, -front_length, 0]) cube([thickness, front_length, width]);
-      for (i = [0:(number_of_hooks-1)]) {
-        each_hook(i);
-      }
+  union() {
+    rotate([90,0,0]) translate([thickness/2, holeDiameter/2, -thickness ]) brace();
+    translate([0, 0, holeDiameter/2]) rotate([0, 90, 0]) cylinder(d=holeDiameter, h=thickness);
+    translate([0, -front_length, 0]) cube([thickness, front_length, width]);
+    for (i = [0:(number_of_hooks-1)]) {
+      each_hook(i);
     }
-    }
-    // translate([-1, -wall_hole_offset, width/2]) rotate([0, 90, 0]) cylinder(d=wall_hole_d, h=thickness+2);
-    // translate([thickness/2+.1, -wall_hole_offset, width/2]) rotate([0, 90, 0]) cylinder(d1=wall_hole_d, d2=wall_hole_d*2, h=thickness/2);
-    
-//   }
+  }
 }
-// wall_hook();
+
+module brace() {
+  sphere(d=thickness*2);
+  translate([0, 0, front_length+thickness]) sphere(d=thickness*2);
+  cylinder(d=thickness*2, h=front_length+thickness);
+}
 
