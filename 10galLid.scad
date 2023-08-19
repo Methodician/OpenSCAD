@@ -15,9 +15,11 @@ LIP_DEPTH = 7;
 // existing lamp
 LAMP_WIDTH = 265;
 LAMP_DEPTH = 55;
-LAMP_DEPTH_INSET = 11;
-LAMP_WIDTH_INSET_NORTH = 20;
-LAMP_WIDTH_INSET_SOUTH = 35;
+LAMP_DEPTH_INSET = 11 / 2;
+LAMP_WIDTH_INSET_NORTH = 20 / 2;
+LAMP_WIDTH_INSET_SOUTH = 35 / 2;
+LAMP_REST_DEPTH = 3.1;
+LAMP_REST_WIDTH = 54;
 
 // filter wood protrusion
 WOOD_OPENING_WIDTH_LIMIT = 160;
@@ -69,12 +71,52 @@ module NetCupOpening() {
         netCupBase();
 }
 
-module LampCutout() {
-    module lampCutoutBase() {
-        cube([LAMP_WIDTH - LAMP_WIDTH_INSET_NORTH - LAMP_WIDTH_INSET_SOUTH, LAMP_DEPTH, CUTOUT_THICKNESS]);
+
+module LampBodyPlaceholder() {
+    translate([MAX_WIDTH / 2 - LAMP_WIDTH / 2 + LIP_DEPTH * 2, MAX_DEPTH - LAMP_DEPTH - LIP_DEPTH * 2, + 17]) {
+        color("lavender", 0.3)
+            translate([0, 0, CUTOUT_THICKNESS * 1.1])
+                cube([LAMP_WIDTH, LAMP_DEPTH, CUTOUT_THICKNESS]);
     }
-    translate([MAX_WIDTH / 2 - LAMP_WIDTH / 2 + LIP_DEPTH * 2, MAX_DEPTH - LAMP_DEPTH - LIP_DEPTH * 2, -OVERLAP_FIXER_OFFEST])
+}
+
+module LampCutout() {
+
+    module lampCutoutBase() {
+        lampOpening();
+    }
+    module lampRest() {
+        module lampRestSquare() {
+            translate([0, LAMP_REST_DEPTH, 0])
+                cube([LAMP_REST_DEPTH, LAMP_REST_WIDTH - LAMP_REST_DEPTH * 2, CUTOUT_THICKNESS]);
+        }
+        module lampRestCircle1() {
+            translate([LAMP_REST_DEPTH / 2, LAMP_REST_DEPTH, 0])
+                cylinder(h=CUTOUT_THICKNESS, d=LAMP_REST_DEPTH);
+        }
+        module lampRestCircle2() {
+            translate([LAMP_REST_DEPTH / 2, LAMP_REST_WIDTH - LAMP_REST_DEPTH, 0])
+                cylinder(h=CUTOUT_THICKNESS, d=LAMP_REST_DEPTH);
+        }
+            lampRestCircle1();
+            lampRestCircle2();
+            lampRestSquare();
+    }
+
+    module lampOpening() {
+        translate([LAMP_WIDTH_INSET_NORTH, LAMP_DEPTH_INSET, 0])
+            cube([LAMP_WIDTH - LAMP_WIDTH_INSET_NORTH - LAMP_WIDTH_INSET_SOUTH, LAMP_DEPTH - LAMP_DEPTH_INSET * 2, CUTOUT_THICKNESS]);
+    }
+    
+    translate([-OVERLAP_FIXER_THING, MAX_DEPTH - LAMP_DEPTH - LIP_DEPTH * 2, -OVERLAP_FIXER_OFFEST])
+        lampRest();
+
+    translate([MAX_WIDTH - LAMP_REST_DEPTH + OVERLAP_FIXER_THING, MAX_DEPTH - LAMP_DEPTH - LIP_DEPTH * 2, -OVERLAP_FIXER_OFFEST])
+        lampRest();
+        
+    translate([MAX_WIDTH / 2 - LAMP_WIDTH / 2 + LIP_DEPTH * 2, MAX_DEPTH - LAMP_DEPTH - LIP_DEPTH * 2, -OVERLAP_FIXER_OFFEST]) {
         lampCutoutBase();
+    }
 }
 
 module WoodCutout() {
@@ -105,15 +147,14 @@ module MainSheet() {
 module TenGallonLid() {
     difference() {
         MainSheet();
-        WoodCutout();
         LampCutout();
+        WoodCutout();
         NetCupOpening();
         AirlineCutouts();
     }
+    LampBodyPlaceholder();
 }
 
-translate([-MAX_WIDTH / 2, -MAX_DEPTH / 2, 0]) {
-    TenGallonLid();
-}
+TenGallonLid();
 
 // AirlineCutouts();
