@@ -2,13 +2,13 @@ $fa = 1;
 // $fs = 0.4;
 $fs = .15;
 
-THICKNESS = 3; // see if varying between about 1.5 and 10.0 changes quote much
+THICKNESS = 2; // see if varying between about 1.5 and 10.0 changes quote much
 OVERLAP_FIXER_THING = 0.002;
 OVERLAP_FIXER_OFFEST = 0.001;
 CUTOUT_THICKNESS = THICKNESS + OVERLAP_FIXER_THING;
 // tank dimensions
-MAX_WIDTH = 495;
-MAX_DEPTH = 250;
+MAX_WIDTH = 496.5;
+MAX_DEPTH = 248.25;
 LIP_DEPTH = 7;
 
 // Accesory dimensions
@@ -32,12 +32,86 @@ NET_CUP_UPPER_DIAMETER = 50;
 // wires and tubes baselines
 AIR_LINE_DIAMETER = 8;
 WATER_LINE_DIAMETER = 21;
-AC_WIRE_WIDTH = 5.5;
-AC_WIRE_DEPTH = 3.5;
-ACCESSORY_CUTOUT_GAP = 15;
+WIRE_DIAMETER = 7;
 
+ACCESSORY_CUTOUT_GAP = 23;
+
+module WireCutouts() {
+
+    module allWireCutouts() {
+        // left cutout
+        translate([LIP_DEPTH + WIRE_DIAMETER / 2 - OVERLAP_FIXER_OFFEST, MAX_DEPTH / 2 - ACCESSORY_CUTOUT_GAP, -OVERLAP_FIXER_OFFEST])
+            rotate([0, 0, 180])
+                wireCutoutBase();
+        
+        // right cutout
+        translate([MAX_WIDTH - LIP_DEPTH - WIRE_DIAMETER / 2 + OVERLAP_FIXER_OFFEST, MAX_DEPTH / 2 + ACCESSORY_CUTOUT_GAP, -OVERLAP_FIXER_OFFEST])
+                wireCutoutBase();
+    }
+
+    module wireCutoutBase() {
+        union() {
+            wireCoutoutCircle();
+            wireCoutoutSquare();
+        }
+    }
+
+    module wireCoutoutCircle() {
+        cylinder(h=CUTOUT_THICKNESS, d=WIRE_DIAMETER);
+    }
+
+    module wireCoutoutSquare() {
+        translate([0, -WIRE_DIAMETER / 2, 0])
+            cube([WIRE_DIAMETER / 2 + LIP_DEPTH, WIRE_DIAMETER, CUTOUT_THICKNESS]);
+    }
+
+    // wireCutoutBase();
+    allWireCutouts();
+}
+
+
+module WaterLineCutouts() {
+
+    module allWaterLineCutouts() {
+        // left cutout
+        translate([LIP_DEPTH + WATER_LINE_DIAMETER / 2 - OVERLAP_FIXER_OFFEST, MAX_DEPTH / 2, -OVERLAP_FIXER_OFFEST])
+            rotate([0, 0, 180])
+                waterLineBase();
+
+        // right cutout
+        translate([MAX_WIDTH - LIP_DEPTH - WATER_LINE_DIAMETER / 2 + OVERLAP_FIXER_OFFEST, MAX_DEPTH / 2, -OVERLAP_FIXER_OFFEST])
+                waterLineBase();
+    }
+    module waterLineBase() {
+        union() {
+            waterLineCircle();
+            waterLineSquare();
+        }
+    }
+    module waterLineCircle() {
+        cylinder(h=CUTOUT_THICKNESS, d=WATER_LINE_DIAMETER);
+    }
+    module waterLineSquare() {
+        translate([0, -WATER_LINE_DIAMETER / 2, 0])
+            cube([WATER_LINE_DIAMETER / 2 + LIP_DEPTH, WATER_LINE_DIAMETER, CUTOUT_THICKNESS]);
+    }
+
+    // waterLineBase();
+    allWaterLineCutouts();
+
+}
 
 module AirlineCutouts() {
+    module allAirlineCutouts() {
+        // left cutout
+        translate([LIP_DEPTH + AIR_LINE_DIAMETER / 2 - OVERLAP_FIXER_OFFEST, MAX_DEPTH / 2 + ACCESSORY_CUTOUT_GAP, -OVERLAP_FIXER_OFFEST])
+            rotate([0, 0, 180])
+                airlineCutoutBase();
+
+        // right cutout
+        translate([MAX_WIDTH - LIP_DEPTH - AIR_LINE_DIAMETER / 2 + OVERLAP_FIXER_OFFEST, MAX_DEPTH / 2 - ACCESSORY_CUTOUT_GAP, -OVERLAP_FIXER_OFFEST])
+                airlineCutoutBase();
+    }
     module airlineCutoutBase() {
 
         union() {
@@ -53,30 +127,34 @@ module AirlineCutouts() {
                 cube([AIR_LINE_DIAMETER / 2 + LIP_DEPTH, AIR_LINE_DIAMETER, CUTOUT_THICKNESS]);
     }
 
-    // left cutout
-    translate([LIP_DEPTH + AIR_LINE_DIAMETER / 2 - OVERLAP_FIXER_OFFEST, MAX_DEPTH / 2 + ACCESSORY_CUTOUT_GAP * 2, -OVERLAP_FIXER_OFFEST])
-        rotate([0, 0, 180])
-            airlineCutoutBase();
-
-    // right cutout
-    translate([MAX_WIDTH - LIP_DEPTH - AIR_LINE_DIAMETER / 2 + OVERLAP_FIXER_OFFEST, MAX_DEPTH / 2 - ACCESSORY_CUTOUT_GAP * 2, -OVERLAP_FIXER_OFFEST])
-            airlineCutoutBase();
+    allAirlineCutouts();
+    // airlineCutoutBase();
+    
 }
 
-module NetCupOpening() {
-    module netCupBase() {
+module NetCupCutouts() {
+
+    module allNetCupCoutouts() {
+        // left cutout
+        translate([LIP_DEPTH + 75, LIP_DEPTH + 55, -OVERLAP_FIXER_OFFEST])
+            netCupCircle();
+
+        // right cutout
+        translate([MAX_WIDTH - LIP_DEPTH - 85, MAX_DEPTH - LIP_DEPTH - 100, -OVERLAP_FIXER_OFFEST])
+            netCupCircle();
+    }
+
+    module netCupCircle() {
         cylinder(h=CUTOUT_THICKNESS, d=NET_CUP_UPPER_DIAMETER);
     }
-    translate([MAX_WIDTH / 4, MAX_DEPTH / 4, -OVERLAP_FIXER_OFFEST])
-        netCupBase();
+    
+    allNetCupCoutouts();
 }
 
 
 module LampBodyPlaceholder() {
     translate([MAX_WIDTH / 2 - LAMP_WIDTH / 2 + LIP_DEPTH * 2, MAX_DEPTH - LAMP_DEPTH - LIP_DEPTH * 2, + 17]) {
-        color("lavender", 0.3)
-            translate([0, 0, CUTOUT_THICKNESS * 1.1])
-                cube([LAMP_WIDTH, LAMP_DEPTH, CUTOUT_THICKNESS]);
+        cube([LAMP_WIDTH, LAMP_DEPTH, CUTOUT_THICKNESS]);
     }
 }
 
@@ -136,7 +214,7 @@ module WoodCutout() {
             cylinder(h=CUTOUT_THICKNESS, d=WOOD_OPENING_DEPTH_LIMIT);
     }
 
-    translate([MAX_WIDTH - WOOD_OPENING_WIDTH_LIMIT - LIP_DEPTH, LIP_DEPTH, -OVERLAP_FIXER_OFFEST])
+    translate([MAX_WIDTH - WOOD_OPENING_WIDTH_LIMIT - LIP_DEPTH - 2, LIP_DEPTH + 4, -OVERLAP_FIXER_OFFEST])
         woodCutoutBase();
 }
 
@@ -149,12 +227,21 @@ module TenGallonLid() {
         MainSheet();
         LampCutout();
         WoodCutout();
-        NetCupOpening();
+        NetCupCutouts();
         AirlineCutouts();
+        WaterLineCutouts();
+        WireCutouts();
     }
-    LampBodyPlaceholder();
+    // %LampBodyPlaceholder();
 }
 
+// projection() {
+//     TenGallonLid();
+// }
 TenGallonLid();
 
 // AirlineCutouts();
+
+// WaterLineCutouts();
+
+// WireCutouts();
