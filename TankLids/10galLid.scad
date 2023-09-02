@@ -153,7 +153,7 @@ module NetCupCutouts() {
 
 
 module LampBodyPlaceholder() {
-    translate([MAX_WIDTH / 2 - LAMP_WIDTH / 2 + LIP_DEPTH * 2, MAX_DEPTH - LAMP_DEPTH - LIP_DEPTH * 2, + 17]) {
+    translate([MAX_WIDTH / 2 - LAMP_WIDTH / 2 + LIP_DEPTH * 2, MAX_DEPTH - LAMP_DEPTH - LIP_DEPTH * 2, 17]) {
         cube([LAMP_WIDTH, LAMP_DEPTH, CUTOUT_THICKNESS]);
     }
 }

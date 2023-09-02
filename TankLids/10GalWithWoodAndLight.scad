@@ -1,60 +1,112 @@
-use <parts/cutouts/GothicWindow.scad>
+use <parts/cutouts/ArchedWindow.scad>
+use <parts/cutouts/NicrewSkyCutouts.scad>
 
 $fa = 1;
 // $fs = 0.4;
 $fs = .15;
 
 // tank dimensions
-MAX_WIDTH = 496.5;
-MAX_DEPTH = 248.25;
-LIP_DEPTH = 7;
+max_width = 496.5;
+max_depth = 248.25;
+lip_depth = 7;
 
 // Accesory dimensions
 // existing lamp
-LAMP_WIDTH = 265;
-LAMP_DEPTH = 55;
-LAMP_DEPTH_INSET = 11 / 2;
-LAMP_WIDTH_INSET_NORTH = 20 / 2;
-LAMP_WIDTH_INSET_SOUTH = 35 / 2;
-LAMP_REST_DEPTH = 3.1;
-LAMP_REST_WIDTH = 54;
-
+lamp_rest_width = 315;
+lamp_depth = 55;
+// lamp_depth_inset = 8;
+// lamp_width_inset = 15;
 // filter wood protrusion
-WOOD_OPENING_WIDTH_LIMIT = 160;
-WOOD_OPENING_DEPTH_LIMIT = 75;
+wood_opening_width_limit = 160;
+wood_opening_depth_limit = 75;
 
 // net cup
-NET_CUP_LIP_DIAMETER = 54.4;
-NET_CUP_UPPER_DIAMETER = 50;
+net_cup_lip_diameter = 54.4;
+net_cup_upper_diameter = 50;
 
 // wires and tubes baselines
-AIR_LINE_DIAMETER = 8;
-WATER_LINE_DIAMETER = 21;
-WIRE_DIAMETER = 7;
+airline_diemeter = 8;
+waterline_diameter = 21;
+wire_diameter = 7;
 
-ACCESSORY_CUTOUT_GAP = 23;
 
 
 module MainSheet() {
-    square([MAX_WIDTH, MAX_DEPTH]);
+    square([max_width, max_depth]);
 }
 
 module WoodCutout() {
-    rotate([0, 90, 0])
-    // translate([MAX_WIDTH - WOOD_OPENING_WIDTH_LIMIT - LIP_DEPTH - 2, LIP_DEPTH + 4, 0])
-        #GothicWindow(WOOD_OPENING_DEPTH_LIMIT, WOOD_OPENING_WIDTH_LIMIT);
+    translate([max_width - wood_opening_width_limit - lip_depth - 2, lip_depth + 4, 0])
+        ArchedWindow(wood_opening_width_limit, wood_opening_depth_limit, "left");
+}
+
+module LeftUtilityCutouts() {
+    module wireCutout() {
+        translate([0, max_depth / 2 - wire_diameter / 2 - waterline_diameter, 0])
+            ArchedWindow(wire_diameter + lip_depth, wire_diameter, "right");
+    }
+
+    module airlineCutout() {
+        translate([0, max_depth / 2 - airline_diemeter / 2 + waterline_diameter, 0])
+            ArchedWindow(airline_diemeter + lip_depth, airline_diemeter, "right");
+    }
+
+    module waterlineCutout() {
+        translate([0, max_depth / 2 - waterline_diameter / 2, 0])
+            ArchedWindow(waterline_diameter + lip_depth, waterline_diameter, "right");
+    }
+    
+    wireCutout();
+    airlineCutout();
+    waterlineCutout();
+}
+
+module RightUtilityCutouts() {
+    module wireCutout() {
+        translate([max_width - wire_diameter - lip_depth, max_depth / 2 - wire_diameter / 2 - waterline_diameter, 0])
+            ArchedWindow(wire_diameter + lip_depth, wire_diameter, "left");
+    }
+
+    module airlineCutout() {
+        translate([max_width - airline_diemeter - lip_depth, max_depth / 2 - airline_diemeter / 2 + waterline_diameter, 0])
+            ArchedWindow(airline_diemeter + lip_depth, airline_diemeter, "left");
+    }
+
+    module waterlineCutout() {
+        translate([max_width - waterline_diameter - lip_depth, max_depth / 2 - waterline_diameter / 2, 0])
+            ArchedWindow(waterline_diameter + lip_depth, waterline_diameter, "left");
+    }
+
+    wireCutout();
+    airlineCutout();
+    waterlineCutout();
+}
+
+module LampOpening() {
+    translate([max_width - lamp_rest_width - lip_depth - 10, max_depth - lamp_depth - lip_depth - 10, 0])
+        NicrewSkyCombinedCutouts(lamp_rest_width);
+}
+
+module LidSplitter() {
+    // An s-curve shaped line 1 unit thick
+    module sCurve() {
+        translate([0, 0, 0])
+            linear_extrude(height = 1, center = true, convexity = 10)
+                bezier_curve([[0, 0], [0, 1], [1, 1], [1, 0]]);
+    }
+
+    sCurve();
 }
 
 module TenGallonLid() {
     difference() {
         MainSheet();
         WoodCutout();
+        LampOpening();
+        LeftUtilityCutouts();
+        RightUtilityCutouts();
     }
 }
 
-// TenGallonLid();
-
-// RoundedCutout(40, 60);
-// MainSheet();
-rotate([45, 0, 0])
-GothicWindow(40, 60);
+%TenGallonLid();
+#LidSplitter();
